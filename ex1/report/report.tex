@@ -1,0 +1,166 @@
+\documentclass[11pt,a4paper,english]{article}
+    \usepackage[latin1]{inputenc}
+    \usepackage{amsmath,amsfonts,amssymb}
+    \usepackage{enumitem}
+    \usepackage{fullpage}
+    \usepackage{graphicx}
+    \usepackage{tabto}
+    \usepackage{etoolbox}
+    \usepackage{hyperref}
+    \usepackage{minted}
+    \usepackage{parskip}
+    \renewcommand{\labelenumii}{\theenumii}
+    \renewcommand{\theenumii}{\theenumi.\arabic{enumii}.}
+
+    \title{Algorithmic Methods of Data Mining - Assignment 1}
+    \author{Maksad Donayorov}
+
+    \begin{document}
+      \maketitle
+      \definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+      \begin{enumerate}
+        \item \textbf{Problem:} \textit{Prove or disprove: $d_{cos}$ is a metric.} \\
+            Metric definition suggest that $d$ is metric if:\\
+            1. \begin{math}d(x,y) \geq 0\ \qquad non-negativity\end{math}\\
+            2. \begin{math}d(x,y) = 0\ x=y\ \qquad identity\ of\ indiscernibles\end{math}\\
+            3. \begin{math}d(x,y)=d(y,x)\ \qquad symmetry\end{math}\\
+            4. \begin{math}d(x,z)\leq d(x,y)+d(y,z)\ \qquad triangle\ inequality\end{math}
+
+            Consequently, we have to either prove of disprove $d_{cos}$ in order to
+            say if it is metric or not. Let's consider a vector $\vec{x}^{\,}=(1,1)$ and
+            $\vec{y}^{\,}=(2,2)$. In this case $\vec{x}^{\,} \neq \vec{y}^{\,}$
+            but our function $d_{cos}$ computes 0:\\
+            \begin{math}d_{cos}(x,y)=1-\dfrac{1+1}{2}=1-1=0\end{math}
+            and that leads to a conclusion that \textit{identity of indiscernibles} does
+            not hold for this function. Thus, it \textbf{is not a metric}.
+
+        \item \textbf{Problem:} \textit{Let $d:X \times X \rightarrow R_+$ be a metric on X.}
+            \begin{enumerate}
+                \item \textit{Show that D(x, y) is also a metric on X}:\\
+                    To prove this, we have to look back to the definition of metric
+                    stated in the section $1$ and validate each point.
+
+                    \vspace{3mm}
+                    1. Non negativity:\\
+                    Since $d:X \times X \rightarrow R_+$ is a metric on X, $d(x,y)$ is $>0$
+                    by definition. Consequently, \begin{math} \dfrac{d(x,y)}{d(x,y)+1} > 0\end{math}.
+                    So, we can conclud that \textbf{non negativity holds}.
+
+                    \vspace{3mm}
+                    2. Identity of indiscernibles:\\
+                    Assuming that $d(x,y)=0$ we will have a result: $\dfrac{d(x,y)}{d(x,y)+1} = \dfrac{0}{0+1}=0$. So,
+                    \textbf{identity of indiscernibles holds}
+
+                    \vspace{3mm}
+                    3. Symmetry\\
+                    Based on this definition $\dfrac{d(x,y)}{d(x, y) + 1}$ should be equal to $\dfrac{d(y,x)}{d(y,x)+1}$.\\
+                    $\dfrac{d(x,y)}{d(x, y) + 1}=\dfrac{d(y,x)}{d(y,x)+1}$\\
+                    $[d(y,x)+1] \times d(x,y) = [d(x, y) + 1] \times d(y,x)$ which is equal to\\
+                    $d(x,y)d(y,x)+d(x,y) = d(x,y)d(y,x) + d(y,x)$.\\
+                    So we can say that \textbf{symmetry holds}
+
+                    \vspace{3mm}
+                    4. Triangle inequality\\
+                    For simplicity let's change $d(,)$ to a notation so that this $d(x,z)\leq d(x,y)+d(y,z)$ inequality
+                    becomes easier to write. Assuming $J=d(x,z), K=(x,y), L=(y,z)$ we have to prove that $J \leq K + L$.
+                    Following similar steps that we did in $3$, we can rewrite it to
+                    $\dfrac{J}{J+1} \leq \dfrac{K}{K+1} + \dfrac{L}{L +1}$.
+                    Solving this arithmetically (which I'm not going to write here) we can infer that:\\
+                    $JKL+JK+JL+J \leq 2JKL+2KL+JK+JL+K+L$ does not change the initial inequality and because of that the
+                    \textbf{triangle inequality holds}
+
+                    \vspace{3mm}
+                    With the final step we can conclude that $D(x, y)$ is also a metric and $D$ is still a metric even
+                    if we change $1$ to $k$, as $1$ could be any number that is greater than $0$.
+
+                \item \textit{What is the role of k? How can the choice of k affect the new metric?}\\
+                    $k$ impacts on the dissimilarity of $D(x,y)$, the more it's value increases the more
+                    different $D(x,y)$ will be.
+                \item \textit{What is a possible application of the new metric?}\\
+                    It can measure the dissimilarity or similarity of $D(x,y)$.
+            \end{enumerate}
+
+        \item \textbf{Problem:} \textit{}\\
+            This can be solved with the same approach as the previous examples by following
+            the 4 steps of identifying metric.
+            \begin{enumerate}
+                \item Non negativity:\\
+                    Since $d(x,y)$ is distance function, by definition it cannot by less that $0$. Following this logic
+                    we can infer that $D_h(A,B)=max(d(a,b))$ and that is $\geqslant$ than $0$. Consequently,
+                    \textbf{non negativity True}
+
+                \item Identity of indiscernible:\\
+                    Again, following the definition we can say that if $d(A,B)=0$ then two sets are the same. This gives
+                    us two conditions: when $A=B$ and when $A\neq B$.\\
+                    The firs case ($A=B$) is easy. We can say that if two sets are equal then the minimum distance is
+                    $0$.\\
+                    In case of $A\neq B$ we can infer that if two sets are not equal, then there is always one point
+                    in one of the set whose minimum distance to the other set cannot be 0. \\
+                    Consequently, \textbf{identity of indiscernible holds}.
+
+                \item Symmetry:\\
+                    Referring to the definition we write that $D_h(A,B)=D_h(B,A)$. To prove that they are hold symmetry
+                    property, we can think of taking their $max$ such as:\\
+                    $max\{d_h(A,B),d_h(B,A)\}=max{d_h(B,A), d_h(A,B)}$\\
+                    Since the order does not matter when thinking about $max$, we can say that
+                    \textbf{the symmetrical property holds}.
+
+                \item Triangle inequality:\\
+                    To prove $d(A, B) \leqslant d(A, C) + d(C, B)$ let's again think about the $max$, such that:\\
+                    $max{d(A, B), d(B, A)} \leqslant max{d(A, C), d(C, A)}+max{d(C, B), d(B, C)}$\\
+                    from that we can say that: $d(a, B) \leqslant d(a, C) + d(C, B)$\\
+                    $d(A, B) = max_{a \in A} d(a, B) \leqslant d(A, C) + d(C, B)$\\
+                    $d(A, B) = max{d(A, B), d(B, A)} \leqslant d(A, C) + d(C, B)$\\
+                    Thus, we can say that the \textbf{triangle inequality holds}.
+            \end{enumerate}
+
+        \item \textbf{Problem:} \textit{}\\
+            I don't know
+
+        \item \textbf{Problem:} \textit{}\\
+            Let's assume we have 3 vectors $\vec{x}^{\,}=[1,2,3]$, $\vec{y}^{\,}=[6,7,8]$ and $\vec{z}^{\,}=[0,3,4]$.
+            For better visualization let's represent them as:\\
+            $\begin{matrix}
+                \\
+                \\
+                d\\
+                \\
+            \end{matrix}$
+            $\left\{
+            \begin{matrix}
+                % x & y & z\\
+                0 & 6 & 0\\
+                2 & 7 & 3\\
+                1 & 8 & 4\\
+            \end{matrix}
+            \right\}$ \qquad
+            $\begin{matrix}
+                {diff}   &     indices\\
+                6        &     i,j\\
+                5        &     i,j\\
+                7        &     i,j\\
+            \end{matrix}$\\
+            .\space\space\space\space\space\_\_\_\_\_\_\_\_ \\
+            .\space\space\space\space\space\space\space $n$
+
+            As you might have noticed the above table conceptualizes the solution. All wee need to do
+            is to loop through $d$ and compute $min$ and $max$ for $n$ elements.
+            \begin{minted}[bgcolor=bg,fontsize=\small,autogobble]{python}
+                for i in d:
+                    for j in n:
+                        min_v = ...
+                        max_v = ...
+                        diff = max_v-min_v
+                        vector_min_max_with_indices = ...
+                        if new_min < min_v or new_max > max_v:
+                            dif = recalculate_new_diff(...)
+                            vector_min_max_with_indices.append(...)
+            \end{minted}
+
+            The complexity of this algorithm will be:
+            $d\times n\times k_{constant} + d \times c_{constant} = O(nd)$.
+        \item \textbf{Problem:} \textit{}\\
+            I don't know
+      \end{enumerate}
+  \end{document}
