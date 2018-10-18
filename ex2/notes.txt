@@ -1,6 +1,6 @@
 eg2
-https://stackoverflow.com/questions/13159594/simple-maximum-value-in-array-and-complexity-calculations
 https://arxiv.org/pdf/0804.0446v3.pdf
+https://stackoverflow.com/questions/13159594/simple-maximum-value-in-array-and-complexity-calculations
 https://cs.stackexchange.com/questions/55786/average-case-analysis-of-a-simple-max-finding-algorithm
 https://cs.stackexchange.com/questions/89842/average-case-analysis-for-finding-max-and-min-value-on-an-array
 

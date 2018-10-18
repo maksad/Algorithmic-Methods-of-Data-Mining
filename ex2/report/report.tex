@@ -22,6 +22,117 @@
 
     \begin{enumerate}
       \item \textbf{Problem:} \textit{Bag of words:}
+        \begin{enumerate}
+          \item \textbf{Question:} \textit{Jaccard coefficient to bags is meaningful and well-motivated:}\\
+            Jaccard coefficient is used for comparing the similarity and diversity of sets. As we are using a finite set to represent "bag of words" the extention of Jaccard index to bag is meaningful and well-motivated.
+
+            For example: assume that we have two documents which are not similar and represented by sets: $A = \{(x, 2), (y, 3)\}$ and $B = \{(x, 1),(z, 3)\}$. The Jaccard coefficient for these documents will be:
+            \begin{align*}
+              J(A, B) = \frac{\|A \cap B\|}{\|A \cup B\|} =
+              \frac{ \| \{x,x,y,y,y\} \cap \{x,z,z,z\} \| }{ \| \{x,x,y,y,y\} \cup \{x,z,z,z\} \| } & = \\
+              \frac{ \| \{x\} \| }{ \| \{ x,x,y,y,y,z,z,z \} \| } & = \frac{1}{8} = 0.125
+            \end{align*}
+            As we can see the Jaccard index does prove that these two documents are not similar.
+            On the contrary, if we take two exactly the same bags: $A = \{(x, 2), (y, 1)\}$ and $B = \{(x, 2),(y, 1)\}$. The the Jaccard index will be:
+            \begin{align*}
+              J(A, B) = \frac{\|A \cap B\|}{\|A \cup B\|} =
+              \frac{ \| \{x,x,y\} \cap \{x,x,y\} \| }{ \| \{x,x,y\} \cup \{x,x,y\} \| } & = \\
+              \frac{ \| \{x,x,y\} \| }{ \| \{ x,x,y \} \| } & = \frac{1}{1} = 1
+            \end{align*}
+            And again we can prove by Jaccard index that these two documents are exactly the same. Consequently, we can say that the extension of the Jaccard coefficient to bags, is
+            meaningful and well-motivated.
+
+          \item \textbf{Question:} \textit{Design a family of hash functions $\mathcal{F}$:}\\
+            As mentioned in the part $1.1$ the Jaccard index measures how similar two sets are. Therefore, we can use \textbf{min-hash} locality-sensitive hashing scheme for Jaccard coefficient to bags. The algorithm is pretty straight forward:
+            \begin{enumerate}
+              \item for sets $A$ and $B$ that represent two documents
+              \item calculated set $C$, such that $C = A \cup B $
+              \item shuffle set $C$ and sample from it minimum element in permutation
+              \item repeat this in a cycle
+            \end{enumerate}
+
+            Now coming back to the prove that min-hash function does satisfies this $Pr[f(A)= f(B)]=J(A,B)$ equality. As always, it is the best to have a good intuition and for that we can look at an example. Let's assume we have two bags:
+            \begin{align*}
+              A = \{ (x,2), (y,2), (z,1) \} \\
+              B = \{ (x,2), (z,1) \} \\
+            \end{align*}
+            Let's now take the union of $A$ and $B$.
+            \begin{align*}
+              C = A \cup B = \{ (x,2), (y,2), (z,1) \} = \{ x_0, x_1, y_2, y_3, z_4 \} \\
+            \end{align*}
+            This union shows us that all the elements that $A$ and $B$ have and we can use this set in our "hash table". But before that let's think of some hash function. Based on the book a good hash function is the one that has a modulo of a prime number that is bigger than the number of elements in the union set $C$. Since we have 5 elements in $C$ we can choose $7$ for our modulo and create some hash functions:
+            \begin{align*}
+               (i + 1) & \ mod \ 7 \\
+              2(i + 1) & \ mod \ 7 \\
+              (i + 13) & \ mod \ 7
+            \end{align*}
+            Following these hash functions we can generate a hash table and populate it with the value of hash functions where $i$ is the value of index: \\
+            \begin{center}
+              \begin{tabular}{c | c | c || c | c | c}
+                $i$   & $A$ & $B$ & $(i + 1) \ mod \ 7$ & $2(i + 1) \ mod \ 7$ & $(i + 13) \ mod \ 7$ \\ \hline \hline
+                $x_0$ &  1  &  1  &       1       &       2        &      5         \\
+                $x_1$ &  1  &  1  &       2       &       3        &      0         \\
+                $y_2$ &  1  &  0  &       3       &       6        &      1         \\
+                $y_3$ &  1  &  0  &       4       &       1        &      2         \\
+                $z_4$ &  1  &  1  &       5       &       3        &      3         \\  \hline
+                      &     &     &     $h_1$     &     $h_2$      &     $h_3$      \\
+              \end{tabular}
+            \end{center}
+
+            The next step would be creating a signature matrix based the hash table:
+            \begin{center}
+              \begin{tabular}{|c | c c |}\hline
+                $i=0$ & $A$ & $B$ \\ \hline
+                $h_1$ &  1  &  1  \\
+                $h_2$ &  2  &  2  \\
+                $h_3$ &  5  &  5  \\  \hline
+              \end{tabular}
+              \begin{tabular}{|c | c c |}\hline
+                $i=1$ & $A$ & $B$ \\ \hline
+                $h_1$ &  1  &  1  \\
+                $h_2$ &  2  &  2  \\
+                $h_3$ &  0  &  0  \\  \hline
+              \end{tabular}
+              \begin{tabular}{|c | c c |}\hline
+                $i=2$ & $A$ & $B$ \\ \hline
+                $h_1$ &  1  &  1  \\
+                $h_2$ &  2  &  2  \\
+                $h_3$ &  0  &  0  \\  \hline
+              \end{tabular}
+              \begin{tabular}{|c | c c |}\hline
+                $i=3$ & $A$ & $B$ \\ \hline
+                $h_1$ &  1  &  1  \\
+                $h_2$ &  1  &  2  \\
+                $h_3$ &  0  &  0  \\  \hline
+              \end{tabular}
+              \begin{tabular}{|c | c c |}\hline
+                $i=4$ & $A$ & $B$ \\ \hline
+                $h_1$ &  1  &  1  \\
+                $h_2$ &  1  &  2  \\
+                $h_3$ &  0  &  0  \\  \hline
+              \end{tabular}
+            \end{center}
+            We are interested in the signature matrix when $i=4$, as that's the last index and it will give us the similarity of $A$ and $B$.
+            \begin{align*}
+              \begin{tabular}{|c | c c | c | }\hline
+                $i=4$ & $A$ & $B$ & similarity\\ \hline
+                $h_1$ &  1  &  1  & 1\\
+                $h_2$ &  1  &  2  & 0\\
+                $h_3$ &  0  &  0  & 1\\  \hline
+              \end{tabular}
+            \end{align*}
+            The $similarity$ column shows us that 2 out 3 hash function found $A$ to be similar to $B$. Which is:
+            \begin{align*}
+              minHash(A,B) = \dfrac{2}{3} = 0.666\bar{6}
+            \end{align*}
+            To compare the correctness of our calculations we can have a look at Jaccard coefficient for $A$ and $B$.
+            \begin{align*}
+              J(A,B) = \dfrac{\| A \cap B \|}{\| A \cup B \|} =
+              \frac{ \| \{ x,x,z\} \| }{ \| \{ x,x,y,y,z \} \| } = \frac{3}{5} = 0.6
+            \end{align*}
+
+            As you can see $J(A,B) \approx minHash(A,B) \approx 0.6$. By defining more hash functions we can decrease this approximation. Consequently, we proved that the equality holds.
+        \end{enumerate}
 
       \item \textbf{Problem:} $\mathcal{O}(\log{w}\ \log{n})$: \\
         Before analyzing the complexity and responding to the question it could be nice to see an algorithm that finds the $max$ number in an array. Such algorithm can be easily written in python, that gives us a clear picture of how the computation is done:
