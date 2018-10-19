@@ -10,6 +10,7 @@
   \usepackage{minted}
   \usepackage{parskip}
   \usepackage[font=small,labelfont=bf]{caption}
+  \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
   \renewcommand{\labelenumii}{\theenumii}
   \renewcommand{\theenumii}{\theenumi.\arabic{enumii}.}
 
@@ -47,7 +48,8 @@
             \begin{enumerate}
               \item for sets $A$ and $B$ that represent two documents
               \item calculated set $C$, such that $C = A \cup B $
-              \item shuffle set $C$ and sample from it minimum element in permutation
+              \item shuffle set $C$
+              \item sample from C the minimum element in permutation
               \item repeat this in a cycle
             \end{enumerate}
 
@@ -170,7 +172,7 @@
           \captionof{figure}{Representation of sliding window: \textit{"CS-E4600 - slide set 7"}.}
         \end{center}
 
-        Using the same logic and intuition we can argue that the \textit{priority sampling for sliding window} will use $\mathcal{O}(\log{w}\log{n})$, where $\log{w}$ is the length of the sliding window and $\log{n}$ is the space for numbers to be stored. The arguments for our prove are the criteria that:
+        Using the same logic and intuition we can argue that the \textit{priority sampling for sliding window} (shown in figure 1), will use $\mathcal{O}(\log{w}\log{n})$, where $\log{w}$ is the length of the sliding window and $\log{n}$ is the space for numbers to be stored. The arguments for our prove are the criteria that:
         \begin{itemize}
           \item in any given window each item has equal chance to be selected as a random sample
           \item each removed element has a larger element proceeding it
@@ -198,5 +200,128 @@
         \end{enumerate}
 
       \item \textbf{Problem:} \textit{Resort to sampling of good items:}
+        \begin{enumerate}
+          \item \textbf{Question}: \textit{a real-world application for the algorithm:} \\
+            Imagine an insurance company that operates in the US, Europe and Asia and has about 2 billion customers. By the end of every month it wants to check an estimated number of sick leaves reported by each customer for the whole period of 30 days. A traditional way would be run through all 2 billion people and check if they have reported sick leave or not for a period of 30 days. That could be computationally expensive and time consuming. Instead they could use this algorithm to take a subset of customers ($X \subseteq U$) for each day and compute how many sick leaves were reported for $i$-th day, then sum all the 30 days to get an estimated number of sick leaves reported for the past one month.\\
+
+          \item \textbf{Question}: \textit{explain the intuition of Monte Carlo algorithm:} \\
+            Referring to the example brought in $4.1$ we can explain the Monte Carlo algorithm with some assumed data. So, we have a set of 2 billion people and in the first step the Monte Carlo algorithm takes a random subset $X \subseteq U$, of size $|X|= N$:
+            \begin{align*}
+              U & = \{ all \ 2 \ bilion \ customers \}  \\
+              X & = \{ a \ random \ subset \ of \ U \ with \ both \ good \ and \ bad \ items \} \\
+              N & = length \ of \ X, \ let's \ say \ it \ is \ 20,000
+            \end{align*}
+            Next it takes only good items from the set $X$:
+            \begin{align*}
+              Y = \{ subset \ of \ X \ who \ reported \ sick \ leave, \ "good \ items" \} = \|Y\| = eg: 900
+            \end{align*}
+
+            And only after that it calculates the the estimated "good items":
+            \begin{align*}
+              Z = \dfrac{ |U||Y|}{N} & = \dfrac{900 * 2,000,000,000}{20000} \\
+                                     & = 90,000,000 \ sick \ leaves \ reported \ per \ one \ day
+            \end{align*}
+            For 30 days we can do the same calculations 30 times and sum all up. \\
+            As you can see the intuition is pretty straight forward once you have a real world use case for the algorithm.
+
+          \item \textbf{Question}: \textit{explain the equation in English:} \\
+            The equation:
+            \begin{align*}
+              Pr[(1 - \epsilon)|G| \leq Z \leq (1 + \epsilon)|G|] \geq 1 - \delta
+            \end{align*}
+            has several "segments" and by explaining each part we can clarify the general picture, which allows us to explicitly state what the equation stands for:
+
+            $|G|$ - is the number good items of a universe $U$ \\
+            $Z$ - estimate or approximation of $|G|$ \\
+            $\epsilon$ - an error \\
+            $\delta$ - a probability that $Z$ does not lie within an interval
+
+            We then move on to the bigger parts:
+
+            $(1 - \epsilon)|G|$ - is a lower bound for $Z$ \\
+            $(1 + \epsilon)|G|$ - is an upper bound for $Z$
+
+            Putting all these together, the equation implies that the probability that $Z$ lies between two bounds is greater than or equal to $1 - \delta$.
+
+          \item \textbf{Question}: \textit{use the Chernoff bound to show the Monte Carlo algorithm returns an estimate Z:}
+            \begin{align*}
+              N \geq \dfrac{4}{e^{2} \rho}\ln \dfrac{2}{\delta}
+            \end{align*}
+            % As $\rho = \dfrac{|G|}{|U|}$ Let's start by replacing with
+            Let's start by replacing the $Z$ with the value $\dfrac{|U||Y|}{N}$:
+            \begin{align*}
+              Pr[(1 - \epsilon)|G| & \leq Z \leq (1 + \epsilon)|G|] \geq 1 - \delta => \\
+              Pr[(1 - \epsilon)|G| & \leq \dfrac{|U||Y|}{N} \leq (1 + \epsilon)|G|] \geq 1 - \delta
+            \end{align*}
+            As we know the value of $\rho$:
+            \begin{align*}
+              \rho = \dfrac{|G|}{|U|} \ which \ is \ |G| = \rho|U|
+            \end{align*}
+            Replacing the value of $|G|$ in our equation we get:
+            \begin{align*}
+              Pr[(1 - \epsilon)\rho|U| \leq \dfrac{|U||Y|}{N} \leq (1 + \epsilon)\rho|U|] \geq 1 - \delta
+            \end{align*}
+            Multiplying this equality with $\dfrac{N}{|U|}$ we get:
+            \begin{align*}
+              Pr[(1 - \epsilon)\rho|U| \times \dfrac{N}{|U|} \leq \dfrac{|U||Y|}{N} \times \dfrac{N}{|U|} \leq (1 + \epsilon)\rho|U| \times \dfrac{N}{|U|}] \geq 1 - \delta
+            \end{align*}
+            We get:
+            \begin{align*}
+              Pr[(1 - \epsilon)\rho N \leq |Y| \leq (1 + \epsilon)\rho N] \geq 1 - \delta \numberthis \label{eqn}
+            \end{align*}
+            Before moving forward it is good time to state the Chernoff bound general notation:
+            \begin{align*}
+              Pr[X \geq (1 + \delta) \mu] \leq e^{ -\frac{ \delta^2 \mu }{3} } \\
+              Pr[X \leq (1 - \delta) \mu] \leq e^{ -\frac{ \delta^2 \mu }{2} }
+            \end{align*}
+            Let's now assume that $X=Y$, $\mu = \rho N$ and $1-\delta$:
+            \begin{align*}
+              Pr[Y \geq (1 + \epsilon) \rho N] \leq e^{ -\frac{ \epsilon^2 \rho N }{3} } \\
+              Pr[Y \leq (1 - \epsilon) \rho N] \leq e^{ -\frac{ \epsilon^2 \rho N }{2} }
+            \end{align*}
+            Now, let's come back to the equation $(1)$ and combine it with the Chernoff bound:
+            \begin{align*}
+              Pr[(1 - \epsilon)\rho N \leq |Y| \leq (1 + \epsilon)\rho N] \geq 1 - e^{ -\frac{ \epsilon^2 \rho N }{3}} - e^{ -\frac{ \epsilon^2 \rho N }{2}} \numberthis \label{eqn}
+            \end{align*}
+            Since
+            \begin{align*}
+              e^{ -\frac{ \epsilon^2 \rho N }{3}} < e^{ -\frac{ \epsilon^2 \rho N }{4}} \\
+              and \\
+              e^{ -\frac{ \epsilon^2 \rho N }{2}} < e^{ -\frac{ \epsilon^2 \rho N }{4}}
+            \end{align*}
+            We can rewrite the equation in (2) like:
+            \begin{align*}
+              1 - e^{ -\frac{ \epsilon^2 \rho N }{4}} - e^{ -\frac{ \epsilon^2 \rho N }{4}} & \leq 1 - \delta \leq 1 \\
+              2e^{ -\frac{ \epsilon^2 \rho N }{4}} & \leq \delta \\
+              \dfrac{2}{\delta}  & \leq e^{ -\frac{ \epsilon^2 \rho N }{4}} \\
+              taking \ ln \ from \ both \ sides \ results \ in: \\
+              ln\dfrac{2}{\delta}  & \leq \frac{ \epsilon^2 \rho N }{4} \\
+              which \ is \ equivalent \ to:\
+              N & \geq \dfrac{4}{\epsilon^2 \rho}ln\dfrac{2}{\delta}
+            \end{align*}
+
+          \item \textbf{Question}: \textit{discuss the bound:} \\
+            If we increase the value of $N$ then the error rate decreases. If $\epsilon$ and $\delta$ are constant and $\rho$ is \textbf{small} then $N$ size should be big. On the other hand if $\epsilon$ and $\delta$ are constant and $\rho$ is \textbf{big} then $N$ size should be small.
+            If $\rho$ is constant then we have these conditions:
+
+            1. When $\epsilon$ is constant and $\delta$ changes:\\
+            \begin{tabular}{c | c | c}
+              $\epsilon$ & $\delta$ & $\dfrac{4}{\epsilon^2 \rho}ln\dfrac{2}{\delta}$ \\ \hline
+              0.2  &  0.1     &   2995.73 \\
+              0.2  &  0.05    &   3688.87 \\
+              0.2  &  0.01    &   5298.31 \\
+              0.2  &  0.001   &   7600.90 \\
+            \end{tabular}
+
+            2. When $\delta$ is constant and $\epsilon$ changes:\\
+            \begin{tabular}{c | c | c}
+              $\epsilon$ & $\delta$ & $\dfrac{4}{\epsilon^2 \rho}ln\dfrac{2}{\delta}$ \\ \hline
+              0.2  &   0.1    &   2995.7 \\
+              0.3  &   0.1    &   1331.4 \\
+              0.4  &   0.1    &   748.9 \\
+              0.5  &   0.1    &   479.3 \\
+            \end{tabular}
+        \end{enumerate}
     \end{enumerate}
 \end{document}
+
