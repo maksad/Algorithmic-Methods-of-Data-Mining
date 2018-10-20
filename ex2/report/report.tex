@@ -44,14 +44,7 @@
             meaningful and well-motivated.
 
           \item \textbf{Question:} \textit{Design a family of hash functions $\mathcal{F}$:}\\
-            As mentioned in the part $1.1$ the Jaccard index measures how similar two sets are. Therefore, we can use \textbf{min-hash} locality-sensitive hashing scheme for Jaccard coefficient to bags. The algorithm is pretty straight forward:
-            \begin{enumerate}
-              \item for sets $A$ and $B$ that represent two documents
-              \item calculated set $C$, such that $C = A \cup B $
-              \item shuffle set $C$
-              \item sample from C the minimum element in permutation
-              \item repeat this in a cycle
-            \end{enumerate}
+            As mentioned in the part $1.1$ the Jaccard index measures how similar two sets are. Therefore, we can use \textbf{min-hash} locality-sensitive hashing scheme for Jaccard coefficient to bags.
 
             Now coming back to the prove that min-hash function does satisfies this $Pr[f(A)= f(B)]=J(A,B)$ equality. As always, it is the best to have a good intuition and for that we can look at an example. Let's assume we have two bags:
             \begin{align*}
@@ -134,6 +127,39 @@
             \end{align*}
 
             As you can see $J(A,B) \approx minHash(A,B) \approx 0.6$. By defining more hash functions we can decrease this approximation. Consequently, we proved that the equality holds.
+
+          \item \textbf{Question:} \textit{Provide pseudo-code $\mathcal{F}$:}\\
+            The algorithm is pretty straight forward:
+            \begin{enumerate}
+              \item for sets $A$, $B$ and etc that represent documents
+              \item calculated set $C$, such that $C = A \cup B \cup ...$
+              \item shuffle set $C$
+              \item sample from C the minimum element in permutation
+              \item populate signature matrix
+              \item compute similarity of documents by the last signature matrix's values
+            \end{enumerate}
+
+            \begin{minted}[bgcolor=bg,linenos,fontsize=\small,autogobble]{js}
+              sample = generate a sample from Union set
+              Row = good items of sample
+
+              for row in Row:
+                for hash_func in hash_functions:
+                  compute hash_func(row)
+                  for column in S:
+                    if hash_func(row) < signature(S,i):
+                      sig_matrix(i) = hash_func(row)
+
+              // query
+              quer = new_doc
+              for row in length(quer):
+                for hash in hash_functions:
+                  hash = compute hash_func(row)
+                  if hash < signature(S,i):
+                    sig_matrix(i) = hash
+
+              similarity = compare(new_doc, sig_matrix)
+            \end{minted}
         \end{enumerate}
 
       \item \textbf{Problem:} $\mathcal{O}(\log{w}\ \log{n})$: \\
