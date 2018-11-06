@@ -1,2 +1,4 @@
-# amdm
-Algorithmic Methods of Data Mining: CS-E4600
+# Algorithmic Methods of Data Mining: CS-E4600
+This repo is based on "Algorithmic Methods of Data Mining: CS-E4600" course at Aalto University. 
+
+It includes list reports and on the course assigments [link to course](https://mycourses.aalto.fi/mod/assign/view.php?id=380235)
