@@ -214,6 +214,30 @@
       \subsection{Prove of SF algorithm is still a factor-2 approximation.}
         At the very beginning when the first element arrives it becomes a center of a new cluster. When the next element comes then we check if it is $2d^*$ apart or not. Since all the points that are coming from the data stream will go through the condition $d_m > d2^*$, we can either assign them to be an element of an already existing cluster or a center of a new cluster. The center assignment is done only if the condition $d_F \leq 2d^*$ is satisfied. At the very end, when all elements are streamed we will end up in a situation that all the elements that are not center are at most $2d^*$ apart from their closest cluster. Consequently, the maximum radius of a cluster or the cost of clustering is less than or equal to $2d^*$. That being said, we can conclude that the SF algorithm is a factor-2 approximation.
       \subsection{Modification of the SF algorithm.}
+        \begin{minted}[bgcolor=bg,linenos,fontsize=\small,autogobble]{python}
+          '''
+          Input: a stream of data points X
+          (Assume that the optimal k-centers cost d is NOT known)
+          Output: clustering of points in X in k cluster_centers
+          '''
+
+          while 'number of elements arrived from steam' <= k:
+            elements = store('next arrived element')
+
+          cluster_centers = 'get k clusters from elements'
+          longest_distance_between_centers = 'compute the longest distance from' cluster_centers
+          radius = longest_distance_between_centers/2
+
+          while 'streaming is active':
+            next_element = 'read the next element from the stream'
+            distance_to_closest_cluster = 'get dist of the next elem to the closest clus center'
+            if distance_to_closest_cluster > radius:
+              radius = radius + distance_to_closest_cluster
+              cluster_centers.remove('cluster center closest to next element')
+              cluster_centers.add(next_element)
+            else assign next_element to its closest cluster center
+          return cluster_centers
+        \end{minted}
 
     \section{Problem}
       \subsection{Propose a streaming algorithm.}
