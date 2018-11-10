@@ -212,6 +212,13 @@
         \end{align*}
         From the above inequality we can see that $d(s_1, s_2) \leq 2d^*$ and based on the algorithm this cannot happen. Because, in the algorithm the cluster centers are assigned with the condition that $d_m > 2d^*$. Consequently, we prove by contradiction that the Streaming-Furthest algorithm produces a clustering that has at most $k$ clusters.
       \subsection{Prove of SF algorithm is still a factor-2 approximation.}
+        At the very beginning when the first element arrives it becomes a center of a new cluster. When the next element comes then we check if it is $2d^*$ apart or not. Since all the points that are coming from the data stream will go through the condition $d_m > d2^*$, we can either assign them to be an element of an already existing cluster or a center of a new cluster. The center assignment is done only if the condition $d_F \leq 2d^*$ is satisfied. At the very end, when all elements are streamed we will end up in a situation that all the elements that are not center are at most $2d^*$ apart from their closest cluster. Consequently, the maximum radius of a cluster or the cost of clustering is less than or equal to $2d^*$. That being said, we can conclude that the SF algorithm is a factor-2 approximation.
       \subsection{Modification of the SF algorithm.}
+
+    \section{Problem}
+      \subsection{Propose a streaming algorithm.}
+      \subsection{Correctness of the algorithm.}
+      \subsection{Space that the algorithm uses.}
+      \subsection{Update time of your algorithm.}
 \end{document}
 
