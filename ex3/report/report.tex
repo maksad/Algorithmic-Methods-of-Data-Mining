@@ -163,9 +163,34 @@
       \subsection{
         \textit{correctness of this algorithm}
       }
+        As we have seen the algorithm returns only the optimal "tuples" with the optimal number of clusters. Therefore, it will always filter the the tuples that have a bigger variance (see line 17 of the pseudocode) before moving to the next step. For example, suppose that we have $k=3$ and the list of tuples looks like this:
+        \begin{minted}[bgcolor=bg,fontsize=\small,autogobble]{text}
+          (3, 10,   [2, 4, 9],  [2, 3, 4, 7, 12])
+          (3, 40.6, [3, 5, 6],  [2, 3, 4, 7, 12])
+        \end{minted}
+        Then the algorithm will return the $t$ with the smallest variance, which is in this case $10$:
+        \begin{minted}[bgcolor=bg,fontsize=\small,autogobble]{text}
+          (3, 10,   [2, 4, 9],  [2, 3, 4, 7, 12])
+        \end{minted}
+
+        For detailed explanation of the correctness of this algorithm, please look at the at \textbf{section 1.1}.
 
       \subsection{
         \textit{complexity of the algorithm}
       }
+        There are 3 main component to this algorithm that we have to take into consideration when calculate the complexity of it.
+        \begin{enumerate}
+          \item The \textit{Postorder Traversal} algorithm that we are using, which has complexity of $\mathcal{O}(n)$.
+          \item Number of computation of tuples $t$.
+          \item The variance for each $t$.
+        \end{enumerate}
+
+        Let's start with the variance. We are using a formula that has a complexity of $4n$:
+        \begin{align*}
+          \sum_i x_i^2 - \frac{(\sum_i x_i)^2}{N}
+        \end{align*}
+        We are using that formula for each tuple. The number of times $t$ is calculated equals to $2n-1$. $n$ times for the the leaves and $n-1$ times for the parent nodes. \\
+        So in total, $t$ and $variance$ with the \textit{Postorder Traversal algorithm} are calculated $n(4n^2-4n) = 4n^3-4n^2$ times.\\
+        Consequently, the complexity of this algorithm is $\mathbf{\mathcal{O}(n^3)}$.
 \end{document}
 
