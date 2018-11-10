@@ -163,7 +163,7 @@
       \subsection{
         \textit{correctness of this algorithm}
       }
-        As we have seen the algorithm returns only the optimal "tuples" with the optimal number of clusters. Therefore, it will always filter the the tuples that have a bigger variance (see line 17 of the pseudocode) before moving to the next step. For example, suppose that we have $k=3$ and the list of tuples looks like this:
+        As we have seen the algorithm returns only the optimal "tuples" with the optimal number of clusters. Therefore, it will always filter the tuples that have a bigger variance (see line 17 of the pseudocode) before moving to the next step. For example, suppose that we have $k=3$ and the list of tuples looks like this:
         \begin{minted}[bgcolor=bg,fontsize=\small,autogobble]{text}
           (3, 10,   [2, 4, 9],  [2, 3, 4, 7, 12])
           (3, 40.6, [3, 5, 6],  [2, 3, 4, 7, 12])
@@ -189,8 +189,29 @@
         \begin{align*}
           \sum_i x_i^2 - \frac{(\sum_i x_i)^2}{N}
         \end{align*}
-        We are using that formula for each tuple. The number of times $t$ is calculated equals to $2n-1$. $n$ times for the the leaves and $n-1$ times for the parent nodes. \\
+        We are using that formula for each tuple. The number of times $t$ is calculated equals to $2n-1$. $n$ times for the leaves and $n-1$ times for the parent nodes. \\
         So in total, $t$ and $variance$ with the \textit{Postorder Traversal algorithm} are calculated $n(4n^2-4n) = 4n^3-4n^2$ times.\\
         Consequently, the complexity of this algorithm is $\mathbf{\mathcal{O}(n^3)}$.
+
+    \section{Clustering a data stream}
+      \subsection{Prove of SF algorithm produces a clustering that has at most $k$ cluster centers.}
+        We can prove that the Streaming-Furthest algorithm produces a clustering that has at most $k$ cluster centers, by contradiction. Let's assume that the algorithm produces more clusters than the optimal, which can pe denoted by $p > k$. Where $k$ is the number of clusters that was produced by the optimal and $p$ is the number cluster that were produced by the algorithm. In other words:
+        \begin{align*}
+          C^* & = \{C_1, C_2, C_3 ... C_k\} - optimal\ case \\
+          Ac & = \{Ac_1, Ac_2, Ac_3 ... Ac_p\} - algorithm\ case \\
+          & where \ p > k
+        \end{align*}
+        In this case there will be at least two centers: $\{s_1, s_2\} \in Ac $, that lie inside one of the cluster found in the optimal $C^*$.
+        The representation and depiction of this statement will look like this:
+        \begin{center}
+          \includegraphics[width=7cm]{sc_8.png}
+        \end{center}
+        From here we can make our analogy that:
+        \begin{align*}
+          d(s_1, s_2) \leq d(s_1, d^*) + d(s_2, d^*) \leq 2d^*
+        \end{align*}
+        From the above inequality we can see that $d(s_1, s_2) \leq 2d^*$ and based on the algorithm this cannot happen. Because, in the algorithm the cluster centers are assigned with the condition that $d_m > 2d^*$. Consequently, we prove by contradiction that the Streaming-Furthest algorithm produces a clustering that has at most $k$ clusters.
+      \subsection{Prove of SF algorithm is still a factor-2 approximation.}
+      \subsection{Modification of the SF algorithm.}
 \end{document}
 
